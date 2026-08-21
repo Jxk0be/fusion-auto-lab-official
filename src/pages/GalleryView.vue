@@ -10,7 +10,7 @@ import { site } from '@/data/site'
 useSeo({
   title: 'Gallery',
   description:
-    'Liquid wrap work from Fusion Auto Lab in Knoxville, TN — full color changes, wheels, calipers, chrome deletes and custom trim.',
+    'Liquid wrap work from Fusion Auto Lab in Knoxville, TN — full color changes, wheels, chrome deletes and custom trim.',
   path: '/gallery',
 })
 
@@ -23,7 +23,7 @@ const instagram = site.socials[0]
     <PageHero
       eyebrow="Portfolio"
       title="The work"
-      subtitle="Full color changes, wheels, calipers and trim — shot in the shop before the keys go back."
+      subtitle="Full color changes, wheels and trim — shot in the shop before the keys go back."
     />
 
     <section class="bg-white py-14 sm:py-18 lg:py-20">

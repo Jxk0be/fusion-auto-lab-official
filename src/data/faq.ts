@@ -42,7 +42,7 @@ export const faqs: FaqItem[] = [
     category: 'The Basics',
     question: 'Can you wrap only part of the car?',
     answer:
-      'Absolutely. Wheels, calipers, roof, hood, mirror caps, grille, badges and chrome trim are all common standalone jobs. A lot of customers start with a chrome delete or wheels before committing to a full color change.',
+      'Absolutely. Wheels, roof, hood, mirror caps, grille, badges and chrome trim are all common standalone jobs. A lot of customers start with a chrome delete or wheels before committing to a full color change.',
   },
   {
     category: 'Care & Longevity',
@@ -78,7 +78,7 @@ export const faqs: FaqItem[] = [
     category: 'Booking & Pricing',
     question: 'How long will my vehicle be at the shop?',
     answer:
-      'Most single-color jobs are a two to three day turnaround. Metallic and pearl work runs three to five days. Full custom multi-tone projects are typically one to two weeks depending on complexity and disassembly.',
+      'Most single-color jobs are a two to four day turnaround. Metallic, chrome and pearl work runs three to five days. Full custom projects are typically one to three weeks depending on complexity and disassembly.',
   },
   {
     category: 'Booking & Pricing',

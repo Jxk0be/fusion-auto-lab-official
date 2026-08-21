@@ -19,7 +19,7 @@ export interface GalleryItem {
   /** Short description of the work — shown under the title. */
   detail: string
   /** Filter chip this belongs to. */
-  category: 'Full Wraps' | 'Wheels & Calipers' | 'Trim & Accents'
+  category: 'Full Wraps' | 'Wheels' | 'Trim & Accents'
   /** Path under /public, or null for a placeholder tile. */
   src: string | null
   /** Describe the image for screen readers and search engines. */
@@ -41,7 +41,7 @@ export const galleryItems: GalleryItem[] = [
     id: 'wheels-1',
     title: 'Wheel Set',
     detail: 'Four wheels, satin finish',
-    category: 'Wheels & Calipers',
+    category: 'Wheels',
     src: null,
   },
   {
@@ -59,13 +59,6 @@ export const galleryItems: GalleryItem[] = [
     src: null,
   },
   {
-    id: 'calipers-1',
-    title: 'Brake Calipers',
-    detail: 'High-temp color, masked on the vehicle',
-    category: 'Wheels & Calipers',
-    src: null,
-  },
-  {
     id: 'full-3',
     title: 'Two-Tone Layout',
     detail: 'Contrast roof and mirror caps',
@@ -75,5 +68,5 @@ export const galleryItems: GalleryItem[] = [
   },
 ]
 
-export const galleryCategories = ['All', 'Full Wraps', 'Wheels & Calipers', 'Trim & Accents'] as const
+export const galleryCategories = ['All', 'Full Wraps', 'Wheels', 'Trim & Accents'] as const
 export type GalleryCategory = (typeof galleryCategories)[number]

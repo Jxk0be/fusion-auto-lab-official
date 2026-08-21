@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# SPA fallback: let vue-router handle client-side routes.
+# Mirrors public/_redirects, which Vite copies into dist/.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

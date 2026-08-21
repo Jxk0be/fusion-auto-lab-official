@@ -54,7 +54,7 @@ const galleryPreview = galleryItems.slice(0, 3)
               class="inline-flex items-center gap-2 rounded-full border border-white/15 px-3.5 py-1.5 text-[0.8125rem] font-medium text-ink-300"
             >
               <span class="h-1.5 w-1.5 rounded-full bg-accent-400" />
-              Knoxville, TN · Open daily {{ site.hours }}
+              Knoxville, TN · Mon–Fri {{ site.hours }}
             </p>
 
             <h1 class="mt-6 text-4xl font-extrabold leading-[1.08] text-white sm:text-5xl lg:text-6xl">
@@ -129,7 +129,7 @@ const galleryPreview = galleryItems.slice(0, 3)
       <div class="container-page">
         <SectionHeading
           eyebrow="Why liquid wrap"
-          title="Paint-like results, wrap-like freedom"
+          title="Paint-like results, wrap-like removability, all at a fraction of the cost."
           subtitle="A sprayed coating gets into the places film cannot, and comes back off whenever you want it to."
         />
         <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

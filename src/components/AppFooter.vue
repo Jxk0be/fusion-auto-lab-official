@@ -83,7 +83,7 @@ const year = new Date().getFullYear()
             </li>
             <li class="flex items-start gap-3">
               <BaseIcon name="clock" :size="17" class="mt-0.5 text-accent-400" />
-              <span>Open daily · {{ site.hours }}</span>
+              <span>Mon–Fri · {{ site.hours }}</span>
             </li>
           </ul>
         </div>

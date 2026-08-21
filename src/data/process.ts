@@ -43,7 +43,7 @@ export interface ValueProp {
   title: string
   body: string
   /** Key into the icon set in components/BaseIcon.vue */
-  icon: 'shield' | 'droplet' | 'sparkle' | 'wrench'
+  icon: 'shield' | 'droplet' | 'sparkle' | 'tag'
 }
 
 export const valueProps: ValueProp[] = [
@@ -55,7 +55,7 @@ export const valueProps: ValueProp[] = [
   {
     icon: 'shield',
     title: 'Factory paint protected',
-    body: 'The coating bonds to the surface, not into it. Your original paint stays sealed away from sun, light scratches and road grime.',
+    body: 'The coating bonds to the surface, not into it. Your original paint stays sealed away and protected from weathering, sunlight, scratches, and rock chips.',
   },
   {
     icon: 'sparkle',
@@ -63,8 +63,8 @@ export const valueProps: ValueProp[] = [
     body: 'Change your mind, sell the car, or go back to stock. The finish peels off cleanly and leaves the paint underneath exactly as it was.',
   },
   {
-    icon: 'wrench',
-    title: 'Repairable',
-    body: 'Scuffs and chips get scuffed and re-coated in place. No re-wrapping an entire panel over one bad rock strike.',
+    icon: 'tag',
+    title: 'Affordable',
+    body: 'A sprayed finish skips the material cost and labor hours a vinyl wrap demands, so a full color change lands well under what film would run you.',
   },
 ]

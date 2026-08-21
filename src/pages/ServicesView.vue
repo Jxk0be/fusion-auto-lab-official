@@ -12,7 +12,7 @@ import { addOns, packages } from '@/data/services'
 useSeo({
   title: 'Services & Pricing',
   description:
-    'Liquid wrap packages for full color changes, wheels, calipers, chrome delete and trim accents. Compare finish depth, durability and turnaround, then request a quote.',
+    'Liquid wrap packages for full color changes, wheels, chrome delete and trim accents. Compare finish depth, durability and turnaround, then request a quote.',
   path: '/services',
 })
 

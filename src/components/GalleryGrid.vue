@@ -92,7 +92,6 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 
           <div class="border-t border-ink-200 bg-white p-4">
             <p class="text-[0.9375rem] font-bold text-ink-900">{{ item.title }}</p>
-            <p class="mt-0.5 text-sm text-ink-500">{{ item.detail }}</p>
           </div>
         </component>
       </li>

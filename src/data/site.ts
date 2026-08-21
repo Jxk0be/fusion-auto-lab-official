@@ -34,11 +34,9 @@ export const site = {
   mapsUrl: 'https://www.google.com/maps/search/?api=1&query=3009+N+Central+St+Knoxville+TN+37917',
 
   /** Shown in the header, footer and on the contact page. */
-  hours: '10:00 AM – 7:00 PM',
+  hours: '10:00 AM – 6:00 PM',
   hoursDetail: [
-    { days: 'Monday – Friday', time: '10:00 AM – 7:00 PM' },
-    { days: 'Saturday', time: '10:00 AM – 7:00 PM' },
-    { days: 'Sunday', time: '10:00 AM – 7:00 PM' },
+    { days: 'Monday – Friday', time: '10:00 AM – 6:00 PM' },
   ],
 
   socials: [

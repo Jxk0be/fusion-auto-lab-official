@@ -49,7 +49,7 @@ watch(menuOpen, (open) => {
         <div class="flex items-center gap-6">
           <span class="flex items-center gap-2">
             <BaseIcon name="clock" :size="14" />
-            Open daily {{ site.hours }}
+            Mon–Fri {{ site.hours }}
           </span>
           <a
             :href="site.mapsUrl"
@@ -164,7 +164,7 @@ watch(menuOpen, (open) => {
           <div class="mt-4 space-y-2 border-t border-white/10 pt-4 text-sm text-ink-400">
             <p class="flex items-center gap-2">
               <BaseIcon name="clock" :size="15" />
-              Open daily {{ site.hours }}
+              Mon–Fri {{ site.hours }}
             </p>
             <a :href="site.mapsUrl" target="_blank" rel="noopener" class="flex items-center gap-2">
               <BaseIcon name="pin" :size="15" />
