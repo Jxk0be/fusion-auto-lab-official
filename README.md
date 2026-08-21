@@ -137,14 +137,14 @@ raw logo blue would be too light to read.
 ## Where do form submissions go?
 
 Right now the quote form opens the visitor's email app with every field
-pre-filled and addressed to fusionautolab@gmail.com. That works everywhere and
+pre-filled and addressed to info@fusionautolab.com. That works everywhere and
 loses nothing, but it does mean the visitor has to hit "send" themselves.
 
 To have submissions land in the inbox automatically:
 
 1. Sign up for a free form service — [Formspree](https://formspree.io),
    [Web3Forms](https://web3forms.com) or [Getform](https://getform.io) all work
-2. Point it at fusionautolab@gmail.com and copy the endpoint URL it gives you
+2. Point it at info@fusionautolab.com and copy the endpoint URL it gives you
 3. Create a file named `.env` next to `package.json`:
 
 ```

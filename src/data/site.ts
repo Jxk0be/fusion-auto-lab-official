@@ -22,7 +22,7 @@ export const site = {
   phone: '(865) 320-1200',
   /** Digits only — used for tel: links. */
   phoneHref: '+18653201200',
-  email: 'fusionautolab@gmail.com',
+  email: 'info@fusionautolab.com',
 
   address: {
     street: '3009 N Central St',

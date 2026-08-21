@@ -10,7 +10,7 @@ import BaseIcon from './BaseIcon.vue'
  * ------------------------------------------------------------------
  * Set VITE_FORM_ENDPOINT in a `.env` file (see .env.example) to a form
  * service URL — Formspree, Web3Forms, Getform and Netlify Forms all accept a
- * plain POST and email the results straight to fusionautolab@gmail.com.
+ * plain POST and email the results straight to info@fusionautolab.com.
  *
  * With no endpoint configured, the form falls back to opening the visitor's
  * email app with every field pre-filled, so nothing is ever lost.

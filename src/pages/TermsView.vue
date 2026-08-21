@@ -37,10 +37,9 @@ const lastUpdated = 'August 2026'
 
           <h2>About this website</h2>
           <p>
-            We keep the information on this site — services, descriptions, turnaround times and
-            comparison ratings — as accurate and current as we can. It is meant to help you
-            understand your options, not to serve as a binding offer. Comparison scores are our own
-            general assessment of trade-offs between packages, not laboratory measurements.
+            We keep the information on this site — services, descriptions and turnaround times —
+            as accurate and current as we can. It is meant to help you understand your options,
+            not to serve as a binding offer.
           </p>
 
           <h2>Quotes, deposits and payment</h2>

@@ -140,6 +140,11 @@ export const addOns: AddOnService[] = [
 
 /* -------------------------------------------------------------------------- */
 /* 3. Comparison chart data                                                    */
+/*                                                                             */
+/* NOT CURRENTLY RENDERED. The Compare section was pulled from both the Home   */
+/* and Services pages pending a new design. Everything below is kept as-is so  */
+/* the section can be restored without rebuilding it — see the comments in     */
+/* HomeView.vue and ServicesView.vue for where it used to sit.                 */
 /* -------------------------------------------------------------------------- */
 
 export const comparison = {
