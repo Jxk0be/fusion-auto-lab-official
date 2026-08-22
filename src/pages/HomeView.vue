@@ -4,7 +4,6 @@ import CtaBand from '@/components/CtaBand.vue'
 import FaqAccordion from '@/components/FaqAccordion.vue'
 import SectionHeading from '@/components/SectionHeading.vue'
 import ServiceCard from '@/components/ServiceCard.vue'
-import ServiceComparison from '@/components/ServiceComparison.vue'
 import { useSeo } from '@/composables/useSeo'
 import { faqs } from '@/data/faq'
 import { galleryItems } from '@/data/gallery'
@@ -175,20 +174,9 @@ const galleryPreview = galleryItems.slice(0, 3)
       </div>
     </section>
 
-    <!-- ================= Comparison ================= -->
-    <section class="bg-white py-16 sm:py-20 lg:py-24">
-      <div class="container-page">
-        <SectionHeading
-          eyebrow="Compare"
-          title="Which package fits your car?"
-          subtitle="An honest look at the trade-offs. More layers buy depth and durability; fewer layers buy speed."
-          align="center"
-        />
-        <div class="mt-12">
-          <ServiceComparison />
-        </div>
-      </div>
-    </section>
+    <!-- Comparison section removed pending a new design. The chart components
+         and the `comparison` data in services.ts are still in place — drop the
+         section back in here to restore it. -->
 
     <!-- ================= Process ================= -->
     <section class="bg-ink-950 py-16 sm:py-20 lg:py-24">

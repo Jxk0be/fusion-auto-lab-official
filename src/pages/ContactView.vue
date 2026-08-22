@@ -8,7 +8,7 @@ import { fullAddress, site } from '@/data/site'
 useSeo({
   title: 'Contact & Free Quote',
   description:
-    'Request a liquid wrap quote from Fusion Auto Lab in Knoxville, TN. Call (865) 320-1200, email fusionautolab@gmail.com, or send the quote form. Open daily 10 AM to 7 PM.',
+    'Request a liquid wrap quote from Fusion Auto Lab in Knoxville, TN. Call (865) 320-1200, email info@fusionautolab.com, or send the quote form. Open Monday to Friday, 10 AM to 6 PM.',
   path: '/contact',
 })
 

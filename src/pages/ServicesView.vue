@@ -4,7 +4,6 @@ import CtaBand from '@/components/CtaBand.vue'
 import PageHero from '@/components/PageHero.vue'
 import SectionHeading from '@/components/SectionHeading.vue'
 import ServiceCard from '@/components/ServiceCard.vue'
-import ServiceComparison from '@/components/ServiceComparison.vue'
 import { useSeo } from '@/composables/useSeo'
 import { processSteps } from '@/data/process'
 import { addOns, packages } from '@/data/services'
@@ -12,7 +11,7 @@ import { addOns, packages } from '@/data/services'
 useSeo({
   title: 'Services & Pricing',
   description:
-    'Liquid wrap packages for full color changes, wheels, chrome delete and trim accents. Compare finish depth, durability and turnaround, then request a quote.',
+    'Liquid wrap packages for full color changes, wheels, chrome delete and trim accents. Gloss, satin, matte, metallic and custom finishes — request a quote.',
   path: '/services',
 })
 
@@ -51,23 +50,12 @@ const packageColors = ['#8b96a1', '#16b0e8', '#e0a63a']
       </div>
     </section>
 
-    <!-- Comparison -->
-    <section class="bg-ink-50 py-16 sm:py-20">
-      <div class="container-page">
-        <SectionHeading
-          eyebrow="Compare"
-          title="Package traits, side by side"
-          subtitle="Switch between the chart and the table — same numbers, whichever way you read best."
-          align="center"
-        />
-        <div class="mt-12">
-          <ServiceComparison />
-        </div>
-      </div>
-    </section>
+    <!-- Comparison section removed pending a new design. The chart components
+         and the `comparison` data in services.ts are still in place — drop the
+         section back in here to restore it. -->
 
     <!-- Add-ons -->
-    <section class="bg-white py-16 sm:py-20">
+    <section class="bg-ink-50 py-16 sm:py-20">
       <div class="container-page">
         <SectionHeading
           eyebrow="A la carte"
