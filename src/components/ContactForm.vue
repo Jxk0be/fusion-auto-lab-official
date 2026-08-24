@@ -126,7 +126,15 @@ const openMailClient = () => {
 const postToLeadline = async (): Promise<boolean> => {
   const response = await fetch(leadlineUrl, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      // Only when the API is behind an ngrok tunnel, which is a staging
+      // arrangement. Free-tier ngrok answers a browser request with its own
+      // warning page instead of proxying, and that page has no CORS headers,
+      // so the POST fails as a CORS error with no status while curl gets a
+      // clean 204. Sent conditionally so it never reaches the real API.
+      ...(/\bngrok\b/.test(leadlineApi) ? { 'ngrok-skip-browser-warning': '1' } : {}),
+    },
     body: JSON.stringify({
       siteKey,
       name: form.name,
