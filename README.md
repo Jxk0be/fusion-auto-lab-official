@@ -136,24 +136,77 @@ raw logo blue would be too light to read.
 
 ## Where do form submissions go?
 
-Right now the quote form opens the visitor's email app with every field
-pre-filled and addressed to info@fusionautolab.com. That works everywhere and
-loses nothing, but it does mean the visitor has to hit "send" themselves.
+Into **LeadLine**, the lead system at `~/Desktop/VedJxBusiness`. When a visitor
+submits the quote form:
 
-To have submissions land in the inbox automatically:
+1. It POSTs to `POST /v1/leads` on the LeadLine API and the lead is recorded
+2. **info@fusionautolab.com is emailed straight away** with the whole enquiry
+3. The customer gets a written acknowledgement back, usually inside a minute,
+   answering what it can from the FAQ and asking one useful follow-up question
+4. The lead shows up in the owner dashboard, where it can be marked contacted,
+   won or lost
 
-1. Sign up for a free form service — [Formspree](https://formspree.io),
-   [Web3Forms](https://web3forms.com) or [Getform](https://getform.io) all work
-2. Point it at info@fusionautolab.com and copy the endpoint URL it gives you
-3. Create a file named `.env` next to `package.json`:
+Nothing about this depends on the visitor having a mail app configured.
+
+### Wiring it up
+
+In the LeadLine repo, create the tenant and print its keys:
+
+```bash
+pnpm seed:fusion
+```
+
+That prints a site key. Put it, and the API origin, in a file named `.env` next
+to `package.json` here:
 
 ```
-VITE_FORM_ENDPOINT=https://formspree.io/f/your-id-here
+VITE_LEADLINE_SITE_KEY=pk_live_...
+VITE_LEADLINE_API=https://api.frontedesk.com
 ```
 
-4. Rebuild. The form now POSTs directly and shows a success screen.
+Then rebuild. Two things to know:
 
-The form already includes a hidden honeypot field that catches most spam bots.
+- **The site key is public** and safe in the built JavaScript — it identifies
+  the shop, it does not authorise anything. Rate limits and the honeypot are
+  what stop abuse.
+- **The API only accepts browser requests from registered tenant domains.** The
+  seed registers `fusionautolab.com` (and `www.`), so a deploy served from a
+  `*.vercel.app` or `*.netlify.app` preview URL will be refused by CORS until
+  the real domain is pointing at it. That is the expected failure and it looks
+  like "the form errors on the preview but works in production".
+
+### Fallbacks, in order
+
+The form tries each of these and uses the first one that is configured, so a
+missing key degrades instead of losing the enquiry:
+
+| Configured | What happens |
+| --- | --- |
+| `VITE_LEADLINE_SITE_KEY` + `VITE_LEADLINE_API` | POSTs to LeadLine, success screen |
+| `VITE_FORM_ENDPOINT` only | POSTs to a generic form service (Formspree, Web3Forms, Getform, Netlify) |
+| Neither | Opens the visitor's email app, pre-filled and addressed to info@fusionautolab.com |
+
+The form includes a hidden honeypot field that catches most spam bots, and the
+sentence above the submit button is stored verbatim on the lead as the consent
+record.
+
+### The two fields LeadLine has no column for
+
+A lead carries name, email, phone and message. **Vehicle** and **service** are
+folded into the top of the message, labelled, so they are the first thing in
+the notification email and the first thing the assistant reads. If a field is
+ever added to this form, do the same with it — see `leadMessage` in
+`src/components/ContactForm.vue`.
+
+### Why there is no `f.js` script tag
+
+LeadLine normally attaches to a site with a one-line `<script>` that enhances
+any `<form data-leadline>`. It is not used here. That snippet reads values out
+of `[name="..."]` attributes and installs its own submit handler; these inputs
+are bound with `v-model` and carry no `name` attributes, and the component
+already owns submit, validation and the success screen. It would find no fields
+and fight the handler that works. Posting to the same endpoint directly is the
+same integration without either problem.
 
 ---
 
