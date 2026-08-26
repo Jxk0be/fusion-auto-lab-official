@@ -3,6 +3,45 @@ import { defineConfig, loadEnv, type Plugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 
+/** Serves POST /api/admin during `npm run dev`, mirroring the Netlify function. */
+function adminApiDev(): Plugin {
+  return {
+    name: 'fusion-admin-api-dev',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use('/api/admin', (req, res) => {
+        if (req.method !== 'POST') {
+          res.statusCode = 405
+          res.setHeader('Allow', 'POST')
+          res.end()
+          return
+        }
+        let raw = ''
+        req.on('data', (chunk) => {
+          raw += chunk
+        })
+        req.on('end', async () => {
+          const reply = (status: number, body: unknown) => {
+            res.statusCode = status
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify(body))
+          }
+          try {
+            const { handleAdmin } = (await server.ssrLoadModule(
+              '/server/admin.ts',
+            )) as typeof import('./server/admin')
+            const result = await handleAdmin(raw ? JSON.parse(raw) : {})
+            reply(result.status, result.body)
+          } catch (error) {
+            server.config.logger.error(`[admin] ${String(error)}`)
+            reply(500, { ok: false, error: 'Something went wrong saving that.' })
+          }
+        })
+      })
+    },
+  }
+}
+
 /**
  * The absolute URL this build will be served from.
  *
@@ -103,7 +142,7 @@ export default defineConfig(({ mode }) => {
   process.env.VITE_SITE_URL = siteUrl
 
   return {
-    plugins: [vue(), tailwindcss(), siteUrlTags(siteUrl), contactApiDev()],
+    plugins: [vue(), tailwindcss(), siteUrlTags(siteUrl), contactApiDev(), adminApiDev()],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),

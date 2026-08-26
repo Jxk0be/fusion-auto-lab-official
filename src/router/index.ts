@@ -15,6 +15,8 @@ const routes: RouteRecordRaw[] = [
   { path: '/payment', name: 'payment', component: () => import('@/pages/PaymentView.vue') },
   { path: '/privacy', name: 'privacy', component: () => import('@/pages/PrivacyView.vue') },
   { path: '/terms', name: 'terms', component: () => import('@/pages/TermsView.vue') },
+  // Not in the nav and disallowed in robots.txt — reachable only by knowing it.
+  { path: '/admin', name: 'admin', component: () => import('@/pages/AdminView.vue') },
   { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/pages/NotFoundView.vue') },
 ]
 

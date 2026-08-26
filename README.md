@@ -47,23 +47,41 @@ npm run preview
 
 ---
 
-## Editing content — everything lives in `src/data/`
+## Editing content — the words live in `src/content/*.json`
 
-You should almost never need to touch a component to change what the site says.
+Every piece of text on the site is in a JSON file under `src/content/`. The
+matching module in `src/data/` only puts TypeScript types on top of it, so the
+app keeps its autocomplete while the content itself stays in plain data.
 
-| File                       | What it controls                                                             |
+That split is deliberate: **JSON is what a CMS can write.** Wiring up an editor
+later means pointing it at `src/content/` — no component or page has to change,
+because nothing imports the content directly.
+
+Changing text by hand still works exactly as before — open the JSON, edit the
+string, commit. Vite bundles these at build time, so there is no runtime fetch
+and no loading state; a content change is just a rebuild.
+
+| Content file               | What it controls                                                             |
 | -------------------------- | ---------------------------------------------------------------------------- |
-| `src/data/site.ts`         | Phone, email, address, hours, Instagram, payment link, nav menu               |
-| `src/data/services.ts`     | **Packages, prices, features, add-ons, and the comparison chart scores**      |
-| `src/data/mechanic.ts`     | **Hourly rate, the rate-comparison line, referral terms, and the job list.** The job list also feeds the quote form's select, so the page and form can't drift. |
-| `src/data/faq.ts`          | Every FAQ question and answer                                                |
-| `src/data/testimonials.ts` | Customer reviews (starts empty — add real ones only)                         |
-| `src/data/gallery.ts`      | Portfolio entries and which photo each one points at                          |
-| `src/data/process.ts`      | The 5-step "how it works" list and the four "why liquid wrap" cards           |
+| `src/content/site.json`    | Phone, email, address, hours, Instagram, payment link, nav menu               |
+| `src/content/services.json` | **Packages, prices, features, add-ons, and the comparison chart scores**      |
+| `src/content/mechanic.json` | **Hourly rate, the rate-comparison line, referral terms, and the job list.** The job list also feeds the quote form's select, so the page and form can't drift. |
+| `src/content/faq.json`     | Every FAQ question and answer                                                |
+| `src/content/testimonials.json` | Customer reviews (starts empty — add real ones only)                         |
+| `src/content/gallery.json` | Portfolio entries and which photo each one points at                          |
+| `src/content/process.json` | The 5-step "how it works" list and the four "why liquid wrap" cards           |
+
+### What stayed in TypeScript
+
+A few things are code, not content, and were left in `src/data/`:
+
+- `site.url` — injected at build time from the deploy (see vite.config.ts)
+- `packageNames`, `mechanicJobs`, `fullAddress` — derived from other values
+- `galleryCategories` — it is the source of a literal union type
 
 ### Adding prices
 
-In `src/data/services.ts`, each package has `priceFrom: null`, which renders as
+In `src/content/services.json`, each package has `priceFrom: null`, which renders as
 **"Request a quote"**. Put a real number in to show it instead:
 
 ```ts
@@ -240,6 +258,65 @@ The visitor sees the error with a one-click pre-filled email as a fallback, and
 everything they typed stays on screen. An enquiry is never silently lost.
 
 That fallback is also what you will see until the SMTP variables are set.
+
+---
+
+## The content editor at `/admin`
+
+The owner changes site text himself at **fusionautolab.com/admin**. He types a
+password, edits labelled fields, and presses Save. He never sees JSON, never
+needs a GitHub account, and does not need you.
+
+Saving commits the matching file in `src/content/` to GitHub, which triggers a
+Netlify rebuild — live in about a minute. Every save is a real commit, so a
+change he regrets is a `git revert`, not a rescue mission.
+
+### Turning it on
+
+Add these in *Netlify → Site settings → Environment variables* (and to `.env`
+if you want it working locally):
+
+| Variable | What it is |
+| -------- | ---------- |
+| `ADMIN_PASSWORD` | What he types at /admin. Make it long, and hand it over in person or by text — not email. |
+| `ADMIN_SECRET` | Optional. Any long random string; signs the 8-hour session. Changing it signs everyone out. |
+| `GITHUB_TOKEN` | A **fine-grained** personal access token, scoped to this one repo, with Contents: read and write. Nothing else. |
+| `GITHUB_REPO` | `Jxk0be/fusion-auto-lab-official` |
+| `GITHUB_BRANCH` | Optional, defaults to `main`. Must be the branch Netlify builds. |
+
+With any of the first three missing the editor returns "not set up yet" rather
+than half-working.
+
+### What he can and cannot reach
+
+`server/admin.ts` holds an explicit allowlist of the seven files under
+`src/content/`. That list is the security boundary that matters: without it, a
+`file` value of `../../netlify/functions/admin.mts` would let anyone with the
+password rewrite the site's own code. Membership is checked by exact match —
+never by prefix, never by resolving a path.
+
+The GitHub token stays on the server. The browser only ever holds a signed
+session token that expires after eight hours.
+
+### Controlling what he sees
+
+`src/admin/schema.ts` is presentation only — friendly field names, help text,
+tab order, and `HIDDEN_KEYS` for technical values he has no business editing
+(slugs, icon names, CSS gradients). **Hiding a key does not delete it**; it is
+saved back untouched, which is verified by test.
+
+Two things the editor does on its own, because both prevent silent breakage:
+
+- Fields whose values come from a small fixed set across a list — a FAQ's
+  section, a gallery item's category — render as a **dropdown**, so a typo
+  cannot create an orphan group.
+- A newly added row starts on a real value for those fields rather than blank.
+  A blank category means the item never appears on the site, and he would have
+  no way to tell why.
+
+### If he breaks something
+
+`git revert` the commit, or edit the JSON back. Every save says who and when.
 
 ---
 

@@ -11,7 +11,14 @@
  *
  * Image tips: shoot landscape, 1600px wide is plenty, and keep files under
  * ~400KB (squoosh.app is a free one-click compressor) so the page stays fast.
+ *
+ * THE WORDS LIVE IN  src/content/gallery.json  — edit that file, not this one.
+ * This module only puts types on top of the JSON, so the app keeps its
+ * autocomplete and type checking. Keeping the text in JSON is what lets a CMS
+ * edit it later without touching any code.
  */
+
+import content from '@/content/gallery.json'
 
 export interface GalleryItem {
   id: string
@@ -28,45 +35,7 @@ export interface GalleryItem {
   wide?: boolean
 }
 
-export const galleryItems: GalleryItem[] = [
-  {
-    id: 'full-1',
-    title: 'Full Color Change',
-    detail: 'Gloss solid, door jambs masked',
-    category: 'Full Wraps',
-    src: null,
-    wide: true,
-  },
-  {
-    id: 'wheels-1',
-    title: 'Wheel Set',
-    detail: 'Four wheels, satin finish',
-    category: 'Wheels',
-    src: null,
-  },
-  {
-    id: 'trim-1',
-    title: 'Chrome Delete',
-    detail: 'Window trim and grille surround',
-    category: 'Trim & Accents',
-    src: null,
-  },
-  {
-    id: 'full-2',
-    title: 'Metallic Finish',
-    detail: 'Pearl base with gloss top coat',
-    category: 'Full Wraps',
-    src: null,
-  },
-  {
-    id: 'full-3',
-    title: 'Two-Tone Layout',
-    detail: 'Contrast roof and mirror caps',
-    category: 'Full Wraps',
-    src: null,
-    wide: true,
-  },
-]
+export const galleryItems: GalleryItem[] = content.galleryItems as GalleryItem[]
 
 export const galleryCategories = ['All', 'Full Wraps', 'Wheels', 'Trim & Accents'] as const
 export type GalleryCategory = (typeof galleryCategories)[number]

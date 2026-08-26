@@ -1,3 +1,4 @@
-# Keep the contact endpoint ahead of the catch-all, or it gets served index.html.
+# Keep the API endpoints ahead of the catch-all, or they get served index.html.
 /api/contact  /.netlify/functions/contact  200
+/api/admin    /.netlify/functions/admin    200
 /*            /index.html                  200
