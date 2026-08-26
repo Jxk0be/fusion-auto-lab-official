@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import BaseIcon from '@/components/BaseIcon.vue'
 import CtaBand from '@/components/CtaBand.vue'
 import PageHero from '@/components/PageHero.vue'
@@ -14,6 +15,29 @@ useSeo({
 })
 
 const instagram = site.socials[0]
+
+/**
+ * Three reviews in a three-column grid look considered; one review stranded in
+ * the left-hand column looks like something failed to load. The owner adds
+ * these one at a time, so the layout has to hold up at every count.
+ */
+const gridClass = computed(() => {
+  const count = testimonials.length
+  if (count === 1) return 'mx-auto max-w-2xl'
+  if (count === 2) return 'mx-auto max-w-4xl sm:grid-cols-2'
+  return 'sm:grid-cols-2 lg:grid-cols-3'
+})
+
+const rated = computed(() => testimonials.filter((t) => typeof t.rating === 'number' && t.rating > 0))
+
+const averageRating = computed(() =>
+  rated.value.length
+    ? Math.round((rated.value.reduce((sum, t) => sum + (t.rating ?? 0), 0) / rated.value.length) * 10) / 10
+    : 0,
+)
+
+/** Only worth summarising once there is more than one score to average. */
+const showSummary = computed(() => rated.value.length >= 2)
 </script>
 
 <template>
@@ -27,7 +51,24 @@ const instagram = site.socials[0]
     <section class="bg-white py-16 sm:py-20">
       <div class="container-page">
         <!-- Reviews exist -->
-        <ul v-if="testimonials.length" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div v-if="showSummary" class="mb-10 flex flex-wrap items-center justify-center gap-3 text-center">
+          <span class="flex gap-0.5 text-accent-500" aria-hidden="true">
+            <BaseIcon
+              v-for="star in 5"
+              :key="star"
+              name="star"
+              :size="20"
+              stroke-width="1.5"
+              :class="star <= Math.round(averageRating) ? 'fill-current' : 'text-ink-300'"
+            />
+          </span>
+          <p class="text-[1.0625rem] text-ink-700">
+            <span class="font-bold text-ink-900">{{ averageRating }} out of 5</span>
+            from {{ rated.length }} {{ rated.length === 1 ? 'review' : 'reviews' }}
+          </p>
+        </div>
+
+        <ul v-if="testimonials.length" class="grid gap-6" :class="gridClass">
           <li
             v-for="(review, i) in testimonials"
             :key="i"
@@ -50,8 +91,10 @@ const instagram = site.socials[0]
             </blockquote>
 
             <footer class="mt-5 border-t border-ink-100 pt-4">
-              <p class="font-bold text-ink-900">{{ review.name }}</p>
-              <p class="mt-0.5 text-sm text-ink-500">
+              <p class="font-bold text-ink-900">
+                {{ review.name || 'Verified customer' }}
+              </p>
+              <p v-if="review.vehicle || review.service" class="mt-0.5 text-sm text-ink-500">
                 <span v-if="review.vehicle">{{ review.vehicle }}</span>
                 <span v-if="review.vehicle && review.service"> · </span>
                 <span v-if="review.service">{{ review.service }}</span>

@@ -27,7 +27,8 @@
 import content from '@/content/testimonials.json'
 
 export interface Testimonial {
-  name: string
+  /** Optional — some customers would rather not be named. */
+  name?: string
   vehicle?: string
   service?: string
   quote: string

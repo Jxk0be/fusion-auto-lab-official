@@ -69,6 +69,36 @@ export const HIDDEN_KEYS = new Set([
   'alt',
 ])
 
+/**
+ * The shape of a new row, for lists that can legitimately be empty.
+ *
+ * The editor normally copies the first existing row to work out what a new one
+ * looks like. That falls apart at zero rows — which is exactly the state the
+ * reviews list ships in — so these lists say up front what a blank entry is.
+ */
+export const NEW_ITEM_TEMPLATES: Record<string, Record<string, unknown>> = {
+  testimonials: {
+    quote: '',
+    name: '',
+    // Starts unrated on purpose — a default of 5 would put a score on the site
+    // that nobody actually gave.
+    rating: 0,
+    vehicle: '',
+    service: '',
+    source: '',
+  },
+  galleryItems: {
+    id: '',
+    title: '',
+    detail: '',
+    category: 'Full Wraps',
+    src: null,
+  },
+}
+
+/** Numeric keys shown as clickable stars instead of a number box. */
+export const STAR_KEYS = new Set(['rating'])
+
 /** Keys that deserve a textarea rather than a single-line input. */
 export const LONG_TEXT_KEYS = new Set([
   'answer',
@@ -120,6 +150,10 @@ export const LABELS: Record<string, string> = {
   step: 'Step number',
   summary: 'Short description',
   testimonials: 'Reviews',
+  quote: 'What they said',
+  rating: 'Stars',
+  source: 'Where it came from',
+  service: 'Service they had',
   title: 'Title',
   turnaround: 'Time in the shop',
   valueProps: 'Why liquid wrap',
@@ -134,8 +168,12 @@ export const HELP: Record<string, string> = {
   src: 'Path to an uploaded photo, like /gallery/mustang.jpg. Leave empty to show a "photo coming soon" tile.',
   hoursShort: 'The compact version shown in the header, e.g. Mon–Fri, 10 AM – 6 PM.',
   rateComparison: 'A comparison claim — make sure it is one you can stand behind.',
-  rating: 'A number from 1 to 5.',
+  rating: 'Click a star to set the score. Click the same star again to remove the rating.',
   enabled: 'Untick to hide the payment page and every payment button.',
+  quote: 'Their words, as they wrote them. Only ever add a review you actually received.',
+  name: 'Optional — leave blank if they would rather not be named.',
+  vehicle: 'Optional, e.g. 2019 Mustang GT.',
+  source: 'Optional, e.g. Google, Instagram, in person.',
 }
 
 export const labelFor = (key: string): string =>

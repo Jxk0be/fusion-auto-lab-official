@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { HELP, HIDDEN_KEYS, LONG_TEXT_KEYS, labelFor } from '@/admin/schema'
+import {
+  HELP,
+  HIDDEN_KEYS,
+  LONG_TEXT_KEYS,
+  NEW_ITEM_TEMPLATES,
+  STAR_KEYS,
+  labelFor,
+} from '@/admin/schema'
 import BaseIcon from '@/components/BaseIcon.vue'
 
 /**
@@ -33,6 +40,8 @@ const isLongText = computed(
     LONG_TEXT_KEYS.has(props.fieldKey) ||
     (typeof props.modelValue === 'string' && props.modelValue.length > 90),
 )
+
+const isStars = computed(() => STAR_KEYS.has(props.fieldKey))
 
 const kind = computed(() => {
   const v = props.modelValue
@@ -104,11 +113,21 @@ const move = (index: number, by: number) => {
 
 /** A new row shaped like the existing ones, so nothing arrives half-formed. */
 const addItem = () => {
-  const template = items.value[0]
+  const existing = items.value[0]
+  const declared = NEW_ITEM_TEMPLATES[props.fieldKey]
+
+  // A declared template is a set of deliberate defaults, so it is used as
+  // written. An existing row is somebody's content — copy its shape, never its
+  // words, or a new review arrives pre-filled with the last customer's.
+  if (existing === undefined && declared) {
+    emit('update:modelValue', [...items.value, { ...declared }])
+    return
+  }
+
   let blank: unknown = ''
-  if (template !== undefined && template !== null && typeof template === 'object') {
+  if (existing !== undefined && existing !== null && typeof existing === 'object') {
     blank = Object.fromEntries(
-      Object.entries(template as Record<string, unknown>).map(([k, v]) => [
+      Object.entries(existing as Record<string, unknown>).map(([k, v]) => [
         k,
         // A fixed-set field starts on a real value rather than blank, so a new
         // row is never invisible on the site just because it was left alone.
@@ -150,6 +169,32 @@ const inputClass =
       {{ label }}
       <span v-if="help" class="mt-0.5 block text-[0.8125rem] text-ink-500">{{ help }}</span>
     </label>
+  </div>
+
+  <div v-else-if="kind === 'number' && isStars">
+    <label class="mb-1.5 block text-sm font-semibold text-ink-800">{{ label }}</label>
+    <div class="flex items-center gap-1">
+      <button
+        v-for="n in 5"
+        :key="n"
+        type="button"
+        class="rounded p-0.5 transition hover:scale-110"
+        :aria-label="`${n} star${n === 1 ? '' : 's'}`"
+        :aria-pressed="n === modelValue"
+        @click="emit('update:modelValue', n === modelValue ? 0 : n)"
+      >
+        <BaseIcon
+          name="star"
+          :size="26"
+          :stroke-width="1.5"
+          :class="n <= ((modelValue as number) || 0) ? 'fill-current text-accent-500' : 'text-ink-300'"
+        />
+      </button>
+      <span class="ml-2 text-[0.8125rem] text-ink-500">
+        {{ modelValue ? `${modelValue} of 5` : 'No rating shown' }}
+      </span>
+    </div>
+    <p v-if="help" class="mt-1 text-[0.8125rem] text-ink-500">{{ help }}</p>
   </div>
 
   <div v-else-if="kind === 'number'">
