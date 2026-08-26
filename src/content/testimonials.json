@@ -1,3 +1,12 @@
 {
-  "testimonials": []
+  "testimonials": [
+    {
+      "quote": "Had a great experience with Lucas from Fusion. He was totally upfront and walked me through what he could do for me. Super friendly guy and excellent car expert. Thank you!",
+      "name": "Jake Shoffner",
+      "rating": 5,
+      "vehicle": "2014 Ford Fusion SE",
+      "service": "Oil Change",
+      "source": "in person"
+    }
+  ]
 }
