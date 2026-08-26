@@ -170,6 +170,19 @@
     margin-bottom: 0.75rem;
   }
 
+  .prose-legal h3 {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--color-ink-900);
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .prose-legal strong {
+    font-weight: 600;
+    color: var(--color-ink-900);
+  }
+
   .prose-legal p,
   .prose-legal li {
     color: var(--color-ink-600);

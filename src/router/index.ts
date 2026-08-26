@@ -3,6 +3,11 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 const routes: RouteRecordRaw[] = [
   { path: '/', name: 'home', component: () => import('@/pages/HomeView.vue') },
   { path: '/services', name: 'services', component: () => import('@/pages/ServicesView.vue') },
+  {
+    path: '/auto-mechanic-services',
+    name: 'mechanic',
+    component: () => import('@/pages/MechanicView.vue'),
+  },
   { path: '/gallery', name: 'gallery', component: () => import('@/pages/GalleryView.vue') },
   { path: '/reviews', name: 'reviews', component: () => import('@/pages/ReviewsView.vue') },
   { path: '/faq', name: 'faq', component: () => import('@/pages/FaqView.vue') },

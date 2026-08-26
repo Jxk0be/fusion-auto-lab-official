@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * NOTE FOR THE OWNER
+ * NOTE FOR THE OWNER — PLEASE READ THROUGH AND EDIT
  * ------------------------------------------------------------------
  * Reasonable, plain-English terms for a small shop. Two things to check
  * before you go live: the deposit/cancellation rules (section "Quotes,
@@ -35,6 +35,13 @@ const lastUpdated = 'August 2026'
             your vehicle. Using the site means you are okay with what is written here.
           </p>
 
+          <p>
+            The shop does two kinds of work — liquid wrapping and general mechanical repair. The
+            sections marked <strong>Mechanical repair work</strong> and
+            <strong>Liquid wrap work</strong> apply to those jobs specifically; everything else
+            applies to both.
+          </p>
+
           <h2>About this website</h2>
           <p>
             We keep the information on this site — services, descriptions and turnaround times —
@@ -63,7 +70,88 @@ const lastUpdated = 'August 2026'
             </li>
           </ul>
 
-          <h2>Condition of your vehicle</h2>
+          <h2>Mechanical repair work</h2>
+          <p>
+            Repair labor is billed at our posted hourly rate. Time spent diagnosing a problem is
+            labor like any other, and is billed the same way — finding the fault is usually the
+            hard part of the job.
+          </p>
+          <ul>
+            <li>
+              <strong>Authorization.</strong> No work begins without your go-ahead. We will tell you
+              what we think the job involves and roughly what it will run before we start.
+            </li>
+            <li>
+              <strong>Changes mid-job.</strong> If we get into a repair and find it needs more time,
+              more parts, or a different fix than expected, we stop and call you. You decide whether
+              to go ahead before any additional work happens.
+            </li>
+            <li>
+              <strong>Estimates are estimates.</strong> A vehicle can hide a seized bolt, a stripped
+              thread or a second failure behind the first one. We will always tell you as soon as we
+              know, rather than absorbing it quietly or springing it on you at pickup.
+            </li>
+            <li>
+              <strong>Work we cannot take on.</strong> We do not have the equipment for every job on
+              every vehicle, and we will say so rather than attempt something we cannot do properly.
+              Call before bringing a vehicle in and we will tell you straight away.
+            </li>
+          </ul>
+
+          <h2>Parts</h2>
+          <ul>
+            <li>
+              Parts are billed on top of labor. Where a part carries a manufacturer's warranty, that
+              warranty passes to you — we are not the manufacturer and cannot extend it.
+            </li>
+            <li>
+              <strong>Parts you supply yourself.</strong> You are welcome to bring your own parts,
+              but tell us before the job is scheduled. We cannot warranty a part we did not supply,
+              and if a customer-supplied part fails, is incorrect, or does not fit, the labor to
+              remove and replace it is billed again at the normal rate.
+            </li>
+            <li>Old parts are disposed of unless you ask for them back before the work starts.</li>
+          </ul>
+
+          <h2>Warranty on repair work</h2>
+          <p>
+            We stand behind our labor. If a repair we carried out fails because of how it was done,
+            bring the vehicle back and we will put it right. Where the part itself is what failed,
+            the manufacturer's warranty on that part applies, and we will help you make that claim.
+          </p>
+          <p>
+            This does not cover parts you supplied yourself, a separate fault that happens to appear
+            after an unrelated repair, damage from continuing to drive a vehicle we advised against
+            driving, or normal wear.
+          </p>
+
+          <h2>Repairs you decide not to go ahead with</h2>
+          <p>
+            If we have already taken something apart to diagnose or reach a fault and you decide not
+            to proceed, the time spent — including putting the vehicle back together — is billed at
+            the normal hourly rate. We will tell you where you stand before that becomes a
+            significant number.
+          </p>
+
+          <h2>Test drives</h2>
+          <p>
+            Some faults only show up under load. By leaving a vehicle for repair you are agreeing
+            that we may drive it on public roads as needed to diagnose the problem and confirm the
+            repair worked.
+          </p>
+
+          <h2>Referral commission</h2>
+          <p>
+            If you send us work, we pay 10% of the labor on that job — labor only, not parts — once
+            the customer has paid in full. If the job does not go ahead, or the invoice is never
+            settled, no commission is due. There is no cap and no sign-up: tell whoever you refer to
+            mention your name.
+          </p>
+
+          <h2>Liquid wrap work</h2>
+          <p>The three sections that follow apply to liquid wrap jobs specifically.</p>
+
+          <h3>Condition of your vehicle</h3>
           <p>
             A sprayed coating follows the surface underneath it. Existing chips, dents, scratches,
             orange peel, rust or failing clear coat can telegraph through the finish, and paint that
@@ -76,7 +164,7 @@ const lastUpdated = 'August 2026'
             responsible for items left inside.
           </p>
 
-          <h2>Care and warranty</h2>
+          <h3>Warranty on wrap work</h3>
           <p>
             We stand behind our workmanship. If something is wrong with the work we performed —
             lifting, peeling or a defect in application — bring the vehicle back and we will make it
@@ -97,7 +185,7 @@ const lastUpdated = 'August 2026'
             looking right.
           </p>
 
-          <h2>Photography</h2>
+          <h3>Photography</h3>
           <p>
             We may photograph completed work for our portfolio and social media. License plates are
             obscured or cropped. If you would rather we not photograph your vehicle, tell us and we

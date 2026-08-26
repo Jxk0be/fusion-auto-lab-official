@@ -7,6 +7,7 @@ import ServiceCard from '@/components/ServiceCard.vue'
 import { useSeo } from '@/composables/useSeo'
 import { faqs } from '@/data/faq'
 import { galleryItems } from '@/data/gallery'
+import { mechanic } from '@/data/mechanic'
 import { processSteps, valueProps } from '@/data/process'
 import { finishes, packages } from '@/data/services'
 import { site } from '@/data/site'
@@ -241,6 +242,57 @@ const galleryPreview = galleryItems.slice(0, 3)
             </div>
           </li>
         </ul>
+      </div>
+    </section>
+
+    <!-- ================= Mechanic services ================= -->
+    <section class="bg-ink-950 py-16 sm:py-20">
+      <div class="container-page">
+        <div class="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-14">
+          <div class="lg:col-span-7">
+            <p class="eyebrow text-accent-400">Also in the shop</p>
+            <h2 class="mt-3 text-3xl font-bold text-white sm:text-4xl">
+              Need a mechanic, not a wrap?
+            </h2>
+            <p class="mt-4 max-w-2xl text-lg leading-relaxed text-ink-300">
+              The shop takes on general repair work too — brakes, suspension, charging systems,
+              cooling, diagnostics and the rest. Flat hourly labor, no diagnostic tiers, and an
+              honest answer up front about whether your job is something we can take on.
+            </p>
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+              <RouterLink to="/auto-mechanic-services" class="btn btn-primary sm:min-w-52">
+                Auto Mechanic Services
+                <BaseIcon name="arrowRight" :size="17" />
+              </RouterLink>
+              <a :href="`tel:${site.phoneHref}`" class="btn btn-ghost-light sm:min-w-44">
+                <BaseIcon name="phone" :size="16" />
+                {{ site.phone }}
+              </a>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5">
+            <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center">
+              <p class="eyebrow text-ink-400">Labor rate</p>
+              <p class="mt-4 flex items-baseline justify-center gap-2">
+                <span class="font-display text-6xl font-extrabold text-white">
+                  {{ mechanic.hourlyRate }}
+                </span>
+                <span class="text-lg font-medium text-ink-400">{{ mechanic.rateUnit }}</span>
+              </p>
+              <p
+                v-if="mechanic.rateComparison"
+                class="mt-4 text-[0.9375rem] leading-relaxed text-accent-200"
+              >
+                {{ mechanic.rateComparison }}
+              </p>
+              <p class="mt-5 border-t border-white/10 pt-5 text-sm leading-relaxed text-ink-400">
+                Send someone my way and {{ mechanic.referral.percent }} of the labor on that job is
+                yours.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
