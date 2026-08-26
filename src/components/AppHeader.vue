@@ -28,7 +28,7 @@ watch(menuOpen, (open) => {
 <template>
   <header class="sticky top-0 z-50">
     <!-- Utility bar: contact details always one tap away on desktop -->
-    <div class="hidden border-b border-white/5 bg-black text-ink-400 lg:block">
+    <div class="hidden border-b border-white/5 bg-black text-ink-400 xl:block">
       <div class="container-page flex h-10 items-center justify-between text-[0.8125rem]">
         <div class="flex items-center gap-6">
           <a
@@ -70,14 +70,14 @@ watch(menuOpen, (open) => {
       :class="scrolled || menuOpen ? 'border-white/10' : 'border-transparent'"
     >
       <nav
-        class="container-page flex h-16 items-center justify-between gap-4 lg:h-20"
+        class="container-page flex h-16 items-center justify-between gap-4 xl:h-20"
         aria-label="Main"
       >
         <RouterLink to="/" class="-m-1 shrink-0 rounded p-1" aria-label="Fusion Auto Lab — home">
           <LogoMark />
         </RouterLink>
 
-        <ul class="hidden items-center gap-1 lg:flex">
+        <ul class="hidden items-center gap-1 xl:flex">
           <li v-for="link in navLinks" :key="link.to">
             <RouterLink
               :to="link.to"
@@ -90,18 +90,16 @@ watch(menuOpen, (open) => {
           </li>
         </ul>
 
-        <div class="hidden items-center gap-2.5 lg:flex">
-          <a :href="`tel:${site.phoneHref}`" class="btn btn-ghost-light !py-2.5 !text-sm">
-            <BaseIcon name="phone" :size="16" />
-            Call
-          </a>
+        <!-- The phone number already sits in the utility bar directly above,
+             so the desktop header only needs the one primary action. -->
+        <div class="hidden items-center gap-2.5 xl:flex">
           <RouterLink to="/contact" class="btn btn-primary !py-2.5 !text-sm">
             Get a Quote
           </RouterLink>
         </div>
 
         <!-- Mobile controls -->
-        <div class="flex items-center gap-2 lg:hidden">
+        <div class="flex items-center gap-2 xl:hidden">
           <a
             :href="`tel:${site.phoneHref}`"
             class="btn btn-ghost-light !px-3 !py-2.5"
@@ -133,7 +131,7 @@ watch(menuOpen, (open) => {
       <div
         v-if="menuOpen"
         id="mobile-menu"
-        class="absolute inset-x-0 top-full max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-white/10 bg-ink-950 shadow-xl lg:hidden"
+        class="absolute inset-x-0 top-full max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-white/10 bg-ink-950 shadow-xl xl:hidden"
       >
         <div class="container-page py-4">
           <ul class="space-y-1">

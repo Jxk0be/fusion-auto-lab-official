@@ -4,6 +4,29 @@ import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 
 /**
+ * The absolute URL this build will be served from.
+ *
+ * Social crawlers (Discord, Facebook, iMessage) do not run JavaScript and will
+ * not resolve a relative og:image, so index.html has to carry a real absolute
+ * URL. Hardcoding the custom domain breaks the moment the site is reachable
+ * anywhere else — which is exactly what happens before DNS is pointed.
+ *
+ * Netlify sets `URL` to the site's primary address at build time, so this
+ * follows the deploy: the netlify.app address today, and the custom domain
+ * automatically once it is attached. SITE_URL overrides it if ever needed.
+ */
+const resolveSiteUrl = () =>
+  (process.env.SITE_URL || process.env.URL || 'https://fusionautolab.com').replace(/\/+$/, '')
+
+/** Swaps the %SITE_URL% token in index.html for the real address. */
+function siteUrlTags(siteUrl: string): Plugin {
+  return {
+    name: 'fusion-site-url',
+    transformIndexHtml: (html) => html.split('%SITE_URL%').join(siteUrl),
+  }
+}
+
+/**
  * Serves POST /api/contact during `npm run dev`.
  *
  * In production that route is a Netlify Function
@@ -74,8 +97,13 @@ export default defineConfig(({ mode }) => {
   // middleware above. On Netlify these come from the site's env settings.
   Object.assign(process.env, loadEnv(mode, process.cwd(), ''))
 
+  // Exposed to the client too, so the canonical and og:url that useSeo rewrites
+  // on navigation agree with what is baked into index.html.
+  const siteUrl = resolveSiteUrl()
+  process.env.VITE_SITE_URL = siteUrl
+
   return {
-    plugins: [vue(), tailwindcss(), contactApiDev()],
+    plugins: [vue(), tailwindcss(), siteUrlTags(siteUrl), contactApiDev()],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),

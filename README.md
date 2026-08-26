@@ -36,6 +36,7 @@ npm run preview
 | ---------- | ---------------------------------------------------------------------- |
 | `/`        | Home — hero, why liquid wrap, packages, comparison chart, process, FAQ |
 | `/services`| Packages, comparison chart + table, a-la-carte add-ons, process         |
+| `/auto-mechanic-services` | General repair: hourly rate, how it works, job list, referral program |
 | `/gallery` | Portfolio grid with category filters and a lightbox                    |
 | `/reviews` | Customer reviews (empty state until real ones are added)               |
 | `/faq`     | Full FAQ, grouped, with Google FAQ structured data                     |
@@ -54,6 +55,7 @@ You should almost never need to touch a component to change what the site says.
 | -------------------------- | ---------------------------------------------------------------------------- |
 | `src/data/site.ts`         | Phone, email, address, hours, Instagram, payment link, nav menu               |
 | `src/data/services.ts`     | **Packages, prices, features, add-ons, and the comparison chart scores**      |
+| `src/data/mechanic.ts`     | **Hourly rate, the rate-comparison line, referral terms, and the job list.** The job list also feeds the quote form's select, so the page and form can't drift. |
 | `src/data/faq.ts`          | Every FAQ question and answer                                                |
 | `src/data/testimonials.ts` | Customer reviews (starts empty — add real ones only)                         |
 | `src/data/gallery.ts`      | Portfolio entries and which photo each one points at                          |
@@ -271,6 +273,23 @@ Already handled:
 - `AutoBodyShop` structured data (name, address, phone, hours) in `index.html`
 - `FAQPage` structured data on the FAQ page
 - `robots.txt` and `sitemap.xml` in `public/`
+
+### Link previews (Discord, iMessage, Facebook)
+
+Social crawlers don't run JavaScript, so the absolute URLs baked into
+`index.html` are what they read. Hardcoding the custom domain breaks any time
+the site is reachable somewhere else — which is the situation before DNS is
+pointed, and it shows up as "Image failed to load" in a Discord embed while the
+title and description still work.
+
+So `index.html` carries a `%SITE_URL%` token that `vite.config.ts` replaces at
+build time with, in order: `SITE_URL`, then Netlify's own `URL`, then
+`https://fusionautolab.com`. Netlify sets `URL` to the site's primary address,
+so previews follow the deploy automatically and start using the custom domain
+the moment it is attached. Nothing to remember.
+
+If a preview still looks stale, the crawler has cached it — Discord holds
+embeds for a while, and appending `?v=2` to the shared link forces a refetch.
 
 **Worth doing next:** claim the free
 [Google Business Profile](https://business.google.com) for the shop. For a local

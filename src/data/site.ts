@@ -35,6 +35,8 @@ export const site = {
 
   /** Shown in the header, footer and on the contact page. */
   hours: '10:00 AM – 6:00 PM',
+  /** Compact version for tight spots like the header bar. */
+  hoursShort: 'Mon–Fri, 10 AM – 6 PM',
   hoursDetail: [
     { days: 'Monday – Friday', time: '10:00 AM – 6:00 PM' },
   ],
@@ -53,13 +55,17 @@ export const site = {
     url: 'https://venmo.com/code?user_id=3216574508957696717&created=1768707927',
   },
 
-  /** Used for canonical URLs and the sitemap. */
-  url: 'https://fusionautolab.com',
+  /**
+   * Used for canonical URLs and Open Graph tags. Injected at build time so it
+   * matches wherever the site is actually deployed — see vite.config.ts.
+   */
+  url: import.meta.env.VITE_SITE_URL || 'https://fusionautolab.com',
 } as const
 
 export const navLinks: NavLink[] = [
   { label: 'Home', to: '/' },
-  { label: 'Services', to: '/services' },
+  { label: 'Wrapping', to: '/services' },
+  { label: 'Mechanic', to: '/auto-mechanic-services' },
   { label: 'Gallery', to: '/gallery' },
   { label: 'Reviews', to: '/reviews' },
   { label: 'FAQ', to: '/faq' },
