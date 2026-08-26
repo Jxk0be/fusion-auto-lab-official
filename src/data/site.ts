@@ -4,72 +4,41 @@
  * ---------------------------------------------------------------------------
  * Everything in this file appears in the header, footer, contact page and
  * structured data. Change it here once and it updates everywhere.
+ *
+ * THE WORDS LIVE IN  src/content/site.json  — edit that file, not this one.
+ * This module only puts types on top of the JSON, so the app keeps its
+ * autocomplete and type checking. Keeping the text in JSON is what lets a CMS
+ * edit it later without touching any code.
  */
+
+import content from '@/content/site.json'
 
 export interface NavLink {
   label: string
   to: string
 }
 
+const address = content.site.address
+const addressLine = `${address.street}, ${address.city}, ${address.state} ${address.zip}`
+
 export const site = {
-  name: 'Fusion Auto Lab',
-  shortName: 'Fusion Auto Lab',
-  tagline: 'Automotive Liquid Wrapping',
-  /** One-line pitch used in the hero and meta descriptions. */
-  blurb:
-    'Sprayed-on, fully removable color changes for your vehicle — finished by hand, built to last, and reversible whenever you want the factory paint back.',
-
-  phone: '(865) 320-1200',
-  /** Digits only — used for tel: links. */
-  phoneHref: '+18653201200',
-  email: 'info@fusionautolab.com',
-
-  address: {
-    street: '3009 N Central St',
-    city: 'Knoxville',
-    state: 'TN',
-    zip: '37917',
-  },
-  /** Opens the address in the visitor's default maps app. */
-  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=3009+N+Central+St+Knoxville+TN+37917',
-
-  /** Shown in the header, footer and on the contact page. */
-  hours: '10:00 AM – 6:00 PM',
-  /** Compact version for tight spots like the header bar. */
-  hoursShort: 'Mon–Fri, 10 AM – 6 PM',
-  hoursDetail: [
-    { days: 'Monday – Friday', time: '10:00 AM – 6:00 PM' },
-  ],
-
-  socials: [
-    { label: 'Instagram', handle: '@fusionautolab', url: 'https://www.instagram.com/fusionautolab' },
-  ],
+  ...content.site,
 
   /**
-   * Payment link. Set `enabled: false` to hide the Payments page and every
-   * "Make a Payment" button across the site until you're ready.
+   * Derived, not stored. Both of these have to agree with the phone number and
+   * address above, and a stored copy is one edit away from silently pointing
+   * somewhere wrong — a dead tel: link or a map of the wrong building.
    */
-  payment: {
-    enabled: true,
-    label: 'Venmo',
-    url: 'https://venmo.com/code?user_id=3216574508957696717&created=1768707927',
-  },
+  phoneHref: `+1${content.site.phone.replace(/\D/g, '')}`,
+  mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressLine)}`,
 
   /**
-   * Used for canonical URLs and Open Graph tags. Injected at build time so it
+   * Not content, so not in the JSON: this is injected at build time so it
    * matches wherever the site is actually deployed — see vite.config.ts.
    */
   url: import.meta.env.VITE_SITE_URL || 'https://fusionautolab.com',
-} as const
+}
 
-export const navLinks: NavLink[] = [
-  { label: 'Home', to: '/' },
-  { label: 'Wrapping', to: '/services' },
-  { label: 'Mechanic', to: '/auto-mechanic-services' },
-  { label: 'Gallery', to: '/gallery' },
-  { label: 'Reviews', to: '/reviews' },
-  { label: 'FAQ', to: '/faq' },
-  { label: 'Contact', to: '/contact' },
-]
+export const navLinks: NavLink[] = content.navLinks as NavLink[]
 
-export const fullAddress = `${site.address.street}, ${site.address.city}, ${site.address.state} ${site.address.zip}`
+export const fullAddress = addressLine

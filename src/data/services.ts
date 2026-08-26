@@ -11,7 +11,14 @@
  *
  * Adding a package: copy a block, give it a new `id`, and add a matching score
  * array to every trait in `comparison.traits` (same order as `packages`).
+ *
+ * THE WORDS LIVE IN  src/content/services.json  — edit that file, not this one.
+ * This module only puts types on top of the JSON, so the app keeps its
+ * autocomplete and type checking. Keeping the text in JSON is what lets a CMS
+ * edit it later without touching any code.
  */
+
+import content from '@/content/services.json'
 
 export interface ServicePackage {
   id: string
@@ -55,88 +62,13 @@ export interface ComparisonTrait {
 /* 1. Wrap packages                                                            */
 /* -------------------------------------------------------------------------- */
 
-export const packages: ServicePackage[] = [
-  {
-    id: 'essential',
-    name: 'Essential',
-    summary: 'A clean, single-color change in a solid gloss, satin or matte finish.',
-    priceFrom: null,
-    priceNote: 'Priced by vehicle size, condition, and finish',
-    turnaround: 'Approximately 2–4 days',
-    features: [
-      'Full exterior color change in one solid color',
-      'Wash, decontamination and full masking',
-      'Door jambs masked to a clean edge',
-      'Gloss, satin or matte finish',
-      'Peels off cleanly when you want the original paint back',
-      'Post-cure inspection and a walkthrough before handoff',
-    ],
-  },
-  {
-    id: 'signature',
-    name: 'Signature',
-    summary: 'Metallic, chrome, pearl, and color shift base coats with paint-like quality and feel.',
-    priceFrom: null,
-    priceNote: 'Most full-vehicle jobs land here',
-    turnaround: 'Approximately 3–5 days',
-    featured: true,
-    features: [
-      'Everything in Essential',
-      'Metallic, chrome, pearl or color-shift base coats',
-      'Additional coats for a deeper, more durable finish',
-      'Paint-like protective top coat that can be buffed, polished, and ceramic coated',
-    ],
-  },
-  {
-    id: 'custom',
-    name: 'Custom',
-    summary: 'Custom multi-tone or multi-finish, designs, and fade work with show-level finishing.',
-    priceFrom: null,
-    priceNote: 'Quoted per project after a walkaround',
-    turnaround: 'Approximately 1–3 weeks',
-    features: [
-      'Everything in Signature',
-      'Custom hand crafted liquid wrap job with options for multi-tone, multi-finish, designs, themes, and color fades',
-    ],
-  },
-]
+export const packages: ServicePackage[] = content.packages as ServicePackage[]
 
 /* -------------------------------------------------------------------------- */
 /* 2. Add-on services                                                          */
 /* -------------------------------------------------------------------------- */
 
-export const addOns: AddOnService[] = [
-  {
-    id: 'wheels',
-    name: 'Wheels',
-    description: 'All four wheels wrapped in gloss, satin or matte color — a fast way to change the whole look of the car.',
-    priceFrom: null,
-  },
-  {
-    id: 'chrome-delete',
-    name: 'Chrome Delete',
-    description: 'Window trim, grille surrounds and badges blacked out for a cleaner, modern look.',
-    priceFrom: null,
-  },
-  {
-    id: 'accents',
-    name: 'Trim & Accents',
-    description: 'Mirror caps, roof, spoiler, grille or badges done in a contrasting color.',
-    priceFrom: null,
-  },
-  {
-    id: 'roof',
-    name: 'Roof & Hood',
-    description: 'Two-tone roof, hood or hardtop treatment without committing to a full color change.',
-    priceFrom: null,
-  },
-  {
-    id: 'removal',
-    name: 'Removal & Refresh',
-    description: 'Peel and clean-up of an existing wrap, or a refresh coat to bring the finish back.',
-    priceFrom: null,
-  },
-]
+export const addOns: AddOnService[] = content.addOns as AddOnService[]
 
 /* -------------------------------------------------------------------------- */
 /* 3. Comparison chart data                                                    */
@@ -147,41 +79,7 @@ export const addOns: AddOnService[] = [
 /* HomeView.vue and ServicesView.vue for where it used to sit.                 */
 /* -------------------------------------------------------------------------- */
 
-export const comparison = {
-  /** Scores are 1–10. Order must match `packages` above. */
-  traits: <ComparisonTrait[]>[
-    {
-      label: 'Durability',
-      description: 'How well the finish holds up to weather, washing and daily driving over the years.',
-      scores: [6, 8, 10],
-    },
-    {
-      label: 'Finish Depth',
-      description: 'Gloss level, clarity and how much depth the color has under direct light.',
-      scores: [6, 8, 10],
-    },
-    {
-      label: 'Color Range',
-      description: 'How many finish options are on the table — solids only, or metallics, candies and fades.',
-      scores: [5, 8, 10],
-    },
-    {
-      label: 'Chip & UV Resistance',
-      description: 'Resistance to rock chips, road debris and fading from sun exposure.',
-      scores: [6, 8, 9],
-    },
-    {
-      label: 'Turnaround Speed',
-      description: 'How quickly the vehicle is back in your hands. More layers and prep means more shop time.',
-      scores: [9, 7, 4],
-    },
-    {
-      label: 'Clean Removal',
-      description: 'How easily the coating peels back off down the road, leaving the factory paint untouched.',
-      scores: [9, 8, 7],
-    },
-  ],
-} as const
+export const comparison = content.comparison
 
 /** Convenience: the package names in chart order. */
 export const packageNames = packages.map((p) => p.name)
@@ -196,14 +94,7 @@ export interface Finish {
   css: string
 }
 
-export const finishes: Finish[] = [
-  { name: 'Gloss', css: 'linear-gradient(140deg, #3a4148 0%, #14171a 55%, #2a3036 100%)' },
-  { name: 'Satin', css: 'linear-gradient(140deg, #7d868f 0%, #4d555c 60%, #6b747c 100%)' },
-  { name: 'Matte', css: 'linear-gradient(140deg, #2b2f33 0%, #23272a 100%)' },
-  { name: 'Metallic', css: 'linear-gradient(140deg, #74d7f9 0%, #16b0e8 45%, #0c5f85 100%)' },
-  { name: 'Pearl', css: 'linear-gradient(140deg, #eef1f4 0%, #c3ccd4 55%, #e6ebef 100%)' },
-  { name: 'Color-shift', css: 'linear-gradient(140deg, #16b0e8 0%, #2f9c7d 45%, #7d5fa8 100%)' },
-]
+export const finishes: Finish[] = content.finishes as Finish[]
 
 /* -------------------------------------------------------------------------- */
 /* 5. Paint condition — the checklist on the quote form                        */
@@ -214,12 +105,4 @@ export const finishes: Finish[] = [
  * are the things that change a quote, because a sprayed coating follows the
  * surface underneath it — so knowing up front saves a wasted walkaround.
  */
-export const defectOptions: string[] = [
-  'Surface rust',
-  'Peeling or failing clear coat',
-  'Dents or dings',
-  'Deep scratches or scuffs',
-  'Previous paint or body work',
-  'Cracked or damaged trim',
-  'Something else (described below)',
-]
+export const defectOptions: string[] = content.defectOptions as string[]

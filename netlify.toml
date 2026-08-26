@@ -14,6 +14,11 @@
   to = "/.netlify/functions/contact"
   status = 200
 
+[[redirects]]
+  from = "/api/admin"
+  to = "/.netlify/functions/admin"
+  status = 200
+
 # SPA fallback: let vue-router handle client-side routes.
 # Mirrors public/_redirects, which Vite copies into dist/.
 [[redirects]]

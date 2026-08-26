@@ -17,7 +17,14 @@
  *     rating: 5,
  *     source: 'Google',
  *   },
+ *
+ * THE WORDS LIVE IN  src/content/testimonials.json  — edit that file, not this one.
+ * This module only puts types on top of the JSON, so the app keeps its
+ * autocomplete and type checking. Keeping the text in JSON is what lets a CMS
+ * edit it later without touching any code.
  */
+
+import content from '@/content/testimonials.json'
 
 export interface Testimonial {
   name: string
@@ -30,4 +37,4 @@ export interface Testimonial {
   source?: string
 }
 
-export const testimonials: Testimonial[] = []
+export const testimonials: Testimonial[] = content.testimonials as Testimonial[]

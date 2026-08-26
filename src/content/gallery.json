@@ -1,0 +1,41 @@
+{
+  "galleryItems": [
+    {
+      "id": "full-1",
+      "title": "Full Color Change",
+      "detail": "Gloss solid, door jambs masked",
+      "category": "Full Wraps",
+      "src": null,
+      "wide": true
+    },
+    {
+      "id": "wheels-1",
+      "title": "Wheel Set",
+      "detail": "Four wheels, satin finish",
+      "category": "Wheels",
+      "src": null
+    },
+    {
+      "id": "trim-1",
+      "title": "Chrome Delete",
+      "detail": "Window trim and grille surround",
+      "category": "Trim & Accents",
+      "src": null
+    },
+    {
+      "id": "full-2",
+      "title": "Metallic Finish",
+      "detail": "Pearl base with gloss top coat",
+      "category": "Full Wraps",
+      "src": null
+    },
+    {
+      "id": "full-3",
+      "title": "Two-Tone Layout",
+      "detail": "Contrast roof and mirror caps",
+      "category": "Full Wraps",
+      "src": null,
+      "wide": true
+    }
+  ]
+}
