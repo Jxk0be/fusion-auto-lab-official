@@ -136,77 +136,108 @@ raw logo blue would be too light to read.
 
 ## Where do form submissions go?
 
-Into **LeadLine**, the lead system at `~/Desktop/VedJxBusiness`. When a visitor
-submits the quote form:
+To **nodemailer**. The quote form POSTs to `/api/contact`, which emails the
+whole enquiry to **info@fusionautolab.com** over SMTP. That is the only route —
+there is no third-party form service and no lead platform in the path.
 
-1. It POSTs to `POST /v1/leads` on the LeadLine API and the lead is recorded
-2. **info@fusionautolab.com is emailed straight away** with the whole enquiry
-3. The customer gets a written acknowledgement back, usually inside a minute,
-   answering what it can from the FAQ and asking one useful follow-up question
-4. The lead shows up in the owner dashboard, where it can be marked contacted,
-   won or lost
+| File | Role |
+| ---- | ---- |
+| `server/contact.ts` | Validates the payload and sends the email. All the real logic. |
+| `netlify/functions/contact.mts` | The production endpoint (a Netlify Function). |
+| `vite.config.ts` | Dev-only middleware so the same route works under `npm run dev`. |
 
-Nothing about this depends on the visitor having a mail app configured.
+Both entry points call the same `handleContact`, so what you test locally is
+what runs in production.
 
-### Wiring it up
+### Setting it up
 
-In the LeadLine repo, create the tenant and print its keys:
-
-```bash
-pnpm seed:fusion
-```
-
-That prints a site key. Put it, and the API origin, in a file named `.env` next
-to `package.json` here:
+Nothing sends until SMTP credentials exist. Locally, copy `.env.example` to
+`.env` and fill in the four `SMTP_` values. On Netlify, add the same four under
+*Site settings → Environment variables*.
 
 ```
-VITE_LEADLINE_SITE_KEY=pk_live_...
-VITE_LEADLINE_API=https://api.frontedesk.com
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_USER=<the account the app password belongs to>
+SMTP_PASS=<16-character App Password, spaces removed>
 ```
 
-Then rebuild. Two things to know:
+`SMTP_USER` is the one people get wrong: it must be the Google account that owns
+the app password, which is not necessarily the address you want mail delivered
+to. Delivery is controlled by `CONTACT_TO`, which defaults to
+info@fusionautolab.com. So if info@ is a real Workspace mailbox, use it for
+both; if it only forwards into a personal Gmail, put the Gmail address in
+`SMTP_USER` and leave `CONTACT_TO` alone.
 
-- **The site key is public** and safe in the built JavaScript — it identifies
-  the shop, it does not authorise anything. Rate limits and the honeypot are
-  what stop abuse.
-- **The API only accepts browser requests from registered tenant domains.** The
-  seed registers `fusionautolab.com` (and `www.`), so a deploy served from a
-  `*.vercel.app` or `*.netlify.app` preview URL will be refused by CORS until
-  the real domain is pointing at it. That is the expected failure and it looks
-  like "the form errors on the preview but works in production".
+App Passwords come from myaccount.google.com/apppasswords and need 2-Step
+Verification switched on first. They are **not** the account password.
 
-### Fallbacks, in order
+### What the form asks for
 
-The form tries each of these and uses the first one that is configured, so a
-missing key degrades instead of losing the enquiry:
+Required: name, phone, email, and the vehicle's year, make and model (three
+separate fields, so the make and model arrive clean rather than as one string).
 
-| Configured | What happens |
-| --- | --- |
-| `VITE_LEADLINE_SITE_KEY` + `VITE_LEADLINE_API` | POSTs to LeadLine, success screen |
-| `VITE_FORM_ENDPOINT` only | POSTs to a generic form service (Formspree, Web3Forms, Getform, Netlify) |
-| Neither | Opens the visitor's email app, pre-filled and addressed to info@fusionautolab.com |
+Everything else is deliberately optional — the service, the finish and the
+paint condition are all "if you know". A customer who hasn't decided yet is
+exactly who the form should not be turning away.
 
-The form includes a hidden honeypot field that catches most spam bots, and the
-sentence above the submit button is stored verbatim on the lead as the consent
-record.
+The **What you need** step branches. Picking *Liquid wrap* shows the service and
+finish selects plus the paint-condition checklist; *Mechanic work* shows the job
+type and a "what's it doing" box; *Not sure yet* shows both. Only the branch
+they actually filled in is sent, so switching work type mid-form never leaves
+stale answers in the email.
 
-### The two fields LeadLine has no column for
+To change the options, edit the data — not the component:
 
-A lead carries name, email, phone and message. **Vehicle** and **service** are
-folded into the top of the message, labelled, so they are the first thing in
-the notification email and the first thing the assistant reads. If a field is
-ever added to this form, do the same with it — see `leadMessage` in
-`src/components/ContactForm.vue`.
+| List | Lives in |
+| ---- | -------- |
+| Wrap services | `packages` + `addOns` in `src/data/services.ts` |
+| Finishes | `finishes` in `src/data/services.ts` (shared with the home page swatches) |
+| Paint condition checklist | `defectOptions` in `src/data/services.ts` |
+| Mechanic job types | `mechanicJobs` in `src/data/mechanic.ts` |
 
-### Why there is no `f.js` script tag
+### Photos
 
-LeadLine normally attaches to a site with a one-line `<script>` that enhances
-any `<form data-leadline>`. It is not used here. That snippet reads values out
-of `[name="..."]` attributes and installs its own submit handler; these inputs
-are bound with `v-model` and carry no `name` attributes, and the component
-already owns submit, validation and the success screen. It would find no fields
-and fight the handler that works. Posting to the same endpoint directly is the
-same integration without either problem.
+Up to **6 photos** per request, attached to the notification email.
+
+Every image is redrawn through a canvas at max 1600px and re-encoded as JPEG
+**before it leaves the browser**. That matters: a phone camera shot is 3–8 MB and
+base64 adds a third on top, so two untouched photos would exceed the 6 MB body
+limit a Netlify function accepts. Resized, a typical photo lands near 300 KB, and
+the upload finishes quickly on a phone signal. A defect photo only needs to show
+the defect.
+
+The limits live in `src/components/PhotoUpload.vue` (`MAX_DIMENSION`, `QUALITY`,
+`MAX_TOTAL_BYTES`). The server re-checks all of it in `collectPhotos` — count,
+data-URL format, decoded size — and rewrites the filename, because none of the
+browser-side limits mean anything to a hand-rolled POST.
+
+HEIC is the one gap: some browsers can't decode it, and those files are skipped
+with a message asking for a JPG or PNG. iPhones normally hand over a JPG through
+a file picker, so this is rare in practice.
+
+### What the endpoint handles
+
+- **Server-side validation.** The in-browser checks are a courtesy to the
+  visitor; anything can POST to the endpoint, so it re-validates everything.
+- **Honeypot.** A hidden field no human sees. A filled one gets a normal-looking
+  success response and nothing is sent.
+- **Header-injection protection.** Newlines are stripped from any value used in
+  a mail header, so the name field cannot smuggle in a `Bcc:`.
+- **HTML escaping** on everything rendered into the email body.
+- **Reply-To.** Mail arrives *from* the shop address with the customer's address
+  as Reply-To, so hitting reply answers them directly. Sending as the customer
+  would fail SPF/DMARC and land in spam.
+- **A record of consent.** The sentence shown above the submit button is sent
+  along and printed at the foot of the email, together with the page it came
+  from.
+
+### If the send fails
+
+The visitor sees the error with a one-click pre-filled email as a fallback, and
+everything they typed stays on screen. An enquiry is never silently lost.
+
+That fallback is also what you will see until the SMTP variables are set.
 
 ---
 
@@ -218,6 +249,11 @@ certificates automatically.
 
 - **Build command:** `npm run build`
 - **Publish directory:** `dist`
+
+`/api/contact` is routed to the Netlify Function by a rule in `netlify.toml`
+(and mirrored in `public/_redirects`) that sits **above** the SPA catch-all.
+Netlify takes the first matching rule, so if that order is ever changed the
+endpoint starts returning the homepage instead of running.
 
 Config for SPA routing is already included for both hosts (`public/_redirects`
 for Netlify, `vercel.json` for Vercel). Without it, refreshing a page like

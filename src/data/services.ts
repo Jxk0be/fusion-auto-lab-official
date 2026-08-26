@@ -185,3 +185,41 @@ export const comparison = {
 
 /** Convenience: the package names in chart order. */
 export const packageNames = packages.map((p) => p.name)
+
+/* -------------------------------------------------------------------------- */
+/* 4. Finishes — shown on the home page and offered in the quote form          */
+/* -------------------------------------------------------------------------- */
+
+export interface Finish {
+  name: string
+  /** Swatch gradient for the home page panel. */
+  css: string
+}
+
+export const finishes: Finish[] = [
+  { name: 'Gloss', css: 'linear-gradient(140deg, #3a4148 0%, #14171a 55%, #2a3036 100%)' },
+  { name: 'Satin', css: 'linear-gradient(140deg, #7d868f 0%, #4d555c 60%, #6b747c 100%)' },
+  { name: 'Matte', css: 'linear-gradient(140deg, #2b2f33 0%, #23272a 100%)' },
+  { name: 'Metallic', css: 'linear-gradient(140deg, #74d7f9 0%, #16b0e8 45%, #0c5f85 100%)' },
+  { name: 'Pearl', css: 'linear-gradient(140deg, #eef1f4 0%, #c3ccd4 55%, #e6ebef 100%)' },
+  { name: 'Color-shift', css: 'linear-gradient(140deg, #16b0e8 0%, #2f9c7d 45%, #7d5fa8 100%)' },
+]
+
+/* -------------------------------------------------------------------------- */
+/* 5. Paint condition — the checklist on the quote form                        */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * What a customer can flag about their paint before we see the vehicle. These
+ * are the things that change a quote, because a sprayed coating follows the
+ * surface underneath it — so knowing up front saves a wasted walkaround.
+ */
+export const defectOptions: string[] = [
+  'Surface rust',
+  'Peeling or failing clear coat',
+  'Dents or dings',
+  'Deep scratches or scuffs',
+  'Previous paint or body work',
+  'Cracked or damaged trim',
+  'Something else (described below)',
+]
