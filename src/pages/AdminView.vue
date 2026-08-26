@@ -28,6 +28,51 @@ const active = ref(CONTENT_FILES[0].file)
 const dirty = ref(new Set<string>())
 const notice = ref<{ tone: 'ok' | 'bad'; text: string } | null>(null)
 
+/**
+ * A save is not the end of the story: it commits the change, which kicks off a
+ * rebuild of the whole site. That takes a minute or two, and until it lands the
+ * old page is still being served — often from the browser's cache even after
+ * it finishes. Without saying so plainly, the honest reaction to "Saved!" is to
+ * refresh, see no change, and assume it did not work.
+ */
+const savedAt = ref<number | null>(null)
+const secondsSinceSave = ref(0)
+let saveTimer: ReturnType<typeof setInterval> | undefined
+
+/** Roughly how long a Netlify build takes for this site. */
+const REBUILD_SECONDS = 120
+
+const rebuildDone = computed(() => secondsSinceSave.value >= REBUILD_SECONDS)
+
+const sinceSaveLabel = computed(() => {
+  const s = secondsSinceSave.value
+  if (s < 10) return 'just now'
+  if (s < 60) return `${s} seconds ago`
+  const minutes = Math.floor(s / 60)
+  return minutes === 1 ? 'a minute ago' : `${minutes} minutes ago`
+})
+
+/**
+ * How to force a fresh copy of the page, described for the device in hand.
+ *
+ * Phones and tablets have no hard-refresh shortcut at all, so naming a key
+ * combination there is worse than saying nothing — it reads as an instruction
+ * he cannot follow. They get the thing that actually works instead.
+ */
+const ua = typeof navigator !== 'undefined' ? navigator.userAgent : ''
+const touchPoints = typeof navigator !== 'undefined' ? navigator.maxTouchPoints : 0
+const coarsePointer =
+  typeof matchMedia !== 'undefined' && matchMedia('(pointer: coarse)').matches
+
+// iPadOS reports a desktop Mac user agent, so touch points are what give it away.
+const isTouchDevice =
+  /Android|iPhone|iPod/.test(ua) || coarsePointer || (/Macintosh/.test(ua) && touchPoints > 1)
+const isMac = /Mac|iPhone|iPad|iPod/.test(ua)
+
+const hardRefreshKeys = computed(() =>
+  isTouchDevice ? null : isMac ? 'Cmd + Shift + R' : 'Ctrl + Shift + R',
+)
+
 const activeMeta = computed(() => CONTENT_FILES.find((f) => f.file === active.value)!)
 const activeData = computed(() => files.value[active.value]?.data)
 
@@ -108,10 +153,12 @@ const save = async () => {
   const next = new Set(dirty.value)
   next.delete(active.value)
   dirty.value = next
-  notice.value = {
-    tone: 'ok',
-    text: 'Saved. The website will show the change in about a minute.',
-  }
+  savedAt.value = Date.now()
+  secondsSinceSave.value = 0
+  clearInterval(saveTimer)
+  saveTimer = setInterval(() => {
+    secondsSinceSave.value = Math.floor((Date.now() - (savedAt.value ?? Date.now())) / 1000)
+  }, 1000)
   // The sha changes on every commit; reload so a second save is not rejected.
   await load()
 }
@@ -138,6 +185,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  clearInterval(saveTimer)
   window.removeEventListener('beforeunload', warnOnLeave)
   document.getElementById('admin-noindex')?.remove()
 })
@@ -181,7 +229,8 @@ onBeforeUnmount(() => {
         <div>
           <h1 class="text-2xl font-bold text-ink-900">Edit the site</h1>
           <p class="mt-1 text-[0.9375rem] text-ink-600">
-            Change the wording, then save. Nothing goes live until you press Save.
+            Change the wording, then save. Nothing goes live until you press Save — and after
+            that the site takes a minute or two to rebuild.
           </p>
         </div>
         <button type="button" class="btn btn-outline !py-2.5 !text-sm" @click="signOut">
@@ -212,6 +261,78 @@ onBeforeUnmount(() => {
             </button>
           </li>
         </ul>
+      </div>
+
+      <!-- After a save: what is actually happening, and what to do about it -->
+      <div
+        v-if="savedAt"
+        class="mt-5 rounded-xl border p-5"
+        :class="rebuildDone ? 'border-accent-200 bg-accent-50' : 'border-ink-200 bg-white'"
+      >
+        <div class="flex items-start gap-3">
+          <span
+            class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+            :class="rebuildDone ? 'bg-accent-500 text-white' : 'bg-ink-100 text-ink-500'"
+          >
+            <BaseIcon
+              :name="rebuildDone ? 'check' : 'spinner'"
+              :size="16"
+              :stroke-width="2.5"
+              :class="!rebuildDone && 'animate-spin'"
+            />
+          </span>
+          <div class="min-w-0 flex-1">
+            <p class="font-bold text-ink-900">
+              {{ rebuildDone ? 'Your changes should be live now' : 'Saved — your site is rebuilding' }}
+            </p>
+
+            <p class="mt-1.5 text-[0.9375rem] leading-relaxed text-ink-600">
+              <template v-if="!rebuildDone">
+                Your change is safely saved, but the website has to rebuild itself before visitors
+                see it. That usually takes a minute or two. You can carry on editing while it works.
+              </template>
+              <template v-else>
+                Give the site a look. If you still see the old wording, the page is cached — use the
+                refresh below rather than a normal one.
+              </template>
+            </p>
+
+            <p class="mt-2 text-[0.8125rem] text-ink-500">Saved {{ sinceSaveLabel }}.</p>
+
+            <div class="mt-4 rounded-lg bg-ink-50 px-4 py-3">
+              <p class="text-[0.9375rem] font-semibold text-ink-800">
+                To see the change, refresh properly
+              </p>
+              <p v-if="hardRefreshKeys" class="mt-1 text-[0.9375rem] leading-relaxed text-ink-600">
+                Hold
+                <kbd class="rounded border border-ink-300 bg-white px-1.5 py-0.5 font-sans text-[0.8125rem] font-semibold">
+                  {{ hardRefreshKeys }}
+                </kbd>
+                on the website tab. A normal refresh often shows the old saved copy from your
+                browser, which is the usual reason a change looks like it did not work.
+              </p>
+              <p v-else class="mt-1 text-[0.9375rem] leading-relaxed text-ink-600">
+                Pull down on the website to refresh it. If it still looks the same, close that tab
+                completely and open the site again — a phone holds on to the old copy of a page more
+                stubbornly than a computer does.
+              </p>
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-2">
+              <a href="/" target="_blank" rel="noopener" class="btn btn-outline !py-2.5 !text-sm">
+                Open the website
+                <BaseIcon name="external" :size="14" />
+              </a>
+              <button
+                type="button"
+                class="btn btn-outline !py-2.5 !text-sm"
+                @click="savedAt = null"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <p

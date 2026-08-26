@@ -36,10 +36,6 @@
       {
         "name": "Check-engine diagnosis",
         "description": "Pulling codes is the easy part. Working out what the code is actually telling you is the job."
-      },
-      {
-        "name": "Exhaust",
-        "description": "Leaks, hangers, mid-pipe and muffler work."
       }
     ],
     "promises": [
