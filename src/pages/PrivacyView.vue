@@ -46,11 +46,20 @@ const lastUpdated = 'August 2026'
             <li>Your email address</li>
             <li>Your phone number</li>
             <li>Your vehicle (year, make and model)</li>
-            <li>The service you are interested in, and any details you add</li>
+            <li>The service and finish you are interested in, if you know</li>
+            <li>What you tell us about the condition of the vehicle</li>
+            <li>Any photos of the vehicle you choose to attach</li>
+            <li>Any other details you add</li>
           </ul>
           <p>
             We do not ask for payment card numbers, financial account details, government ID
             numbers, or any other sensitive personal information through this website.
+          </p>
+          <p>
+            Photos are optional and entirely your choice. They are attached to the email that
+            reaches the shop and are used only to understand the work you are asking about. Please
+            do not include anything in shot you would not want us to have — a licence plate, for
+            instance, is never something we need.
           </p>
 
           <h2>How we use it</h2>

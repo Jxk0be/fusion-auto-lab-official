@@ -1,9 +1,18 @@
 [build]
   command = "npm run build"
   publish = "dist"
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "22"
+
+# The contact form endpoint. Must come before the SPA fallback below —
+# Netlify takes the first matching rule, so the catch-all would otherwise
+# serve index.html instead of running the function.
+[[redirects]]
+  from = "/api/contact"
+  to = "/.netlify/functions/contact"
+  status = 200
 
 # SPA fallback: let vue-router handle client-side routes.
 # Mirrors public/_redirects, which Vite copies into dist/.

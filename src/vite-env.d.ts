@@ -6,14 +6,12 @@ declare module '*.vue' {
   export default component
 }
 
-interface ImportMetaEnv {
-  /** LeadLine site key for this tenant. Printed by `pnpm seed:fusion`. */
-  readonly VITE_LEADLINE_SITE_KEY?: string
-  /** LeadLine API origin, e.g. https://api.frontedesk.com (no trailing path). */
-  readonly VITE_LEADLINE_API?: string
-  /** Fallback form service, used only when the two above are unset. */
-  readonly VITE_FORM_ENDPOINT?: string
-}
+/**
+ * The contact form's SMTP settings are read server-side in server/contact.ts,
+ * not here — Vite only exposes VITE_-prefixed variables to the browser, and
+ * mail credentials must never reach it.
+ */
+interface ImportMetaEnv {}
 
 interface ImportMeta {
   readonly env: ImportMetaEnv
